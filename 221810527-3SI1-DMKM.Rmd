@@ -1,0 +1,64 @@
+---
+title: "UTS DMKM"
+author: "Paramitha Madelin Albright"
+date: "10/27/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(e1071)
+library(caret)
+```
+
+```{r}
+mydata <- read.csv(file.choose(), header=FALSE)
+mydata
+str(mydata)
+```
+
+```{r}
+modelSVM <- svm(V7~., data=mydata)
+summary(modelSVM)
+```
+```{r}
+plot(modelSVM, data=mydata,
+     V7~V1,
+     slice= list(Sepal.Width = 3,
+                 Sepal.Length = 4))
+```
+
+```{r}
+prediksi <- predict(modelSVM, mydata)
+confusionMatrix(table(Predicted = prediksi, Actual=mydata$V7))
+```
+
+```{r}
+set.seed(123)
+coba <- tune(svm, V7~., data=mydata,
+                     ranges = list(epsilon = seq(0,1,0.1),
+                                   cost = 2^(2:9)))
+coba
+```
+
+```{r}
+plot(coba)
+```
+
+```{r}
+summary(coba)
+```
+```{r}
+modelTerbaik <- coba$best.model
+summary(modelTerbaik)
+```
+```{r}
+pred <- predict(bestmodel, iris)
+confusionMatrix(table(Predicted = pred, Actual=iris$Species))
+```
+```{r}
+
+```
+```{r}
+
+```
